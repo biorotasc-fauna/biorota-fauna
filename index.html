@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>BioRota_Fauna</title>
+  <meta name="theme-color" content="#0B6D3B" />
+  <meta name="description" content="Atalho do BioRota_Fauna para abrir o formulário no KoboToolbox." />
+  <!-- Open Graph for link preview -->
+  <meta property="og:title" content="BioRota_Fauna" />
+  <meta property="og:description" content="Abrir o formulário do BioRota_Fauna." />
+  <meta property="og:image" content="./icons/icon-512.png" />
+  <meta property="og:type" content="website" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+  <style>
+    html, body {height:100%; margin:0; background:#ffffff; color:#0b6d3b; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';}
+    .wrap {display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:16px; padding:24px; text-align:center;}
+    .logo {width:96px; height:96px;}
+    .btn {background:#0b6d3b; color:#fff; padding:12px 20px; border-radius:12px; border:none; font-weight:600; cursor:pointer;}
+    .hint {font-size:14px; opacity:.8;}
+    @keyframes spin {to { transform: rotate(360deg); }}
+    .spinner { width: 36px; height: 36px; border-radius: 50%; border: 4px solid #cfe6db; border-top-color: #0b6d3b; animation: spin 1s linear infinite; }
+    iframe { position:fixed; inset:0; width:100%; height:100%; border:0; }
+  </style>
+</head>
+<body>
+  <div id="fallback" class="wrap" role="main">
+    <img src="./icons/icon-192.png" alt="BioRota_Fauna" class="logo" />
+    <h1>BioRota_Fauna</h1>
+    <div class="spinner" aria-hidden="true"></div>
+    <p>Abrindo o formulário…</p>
+    <button class="btn" onclick="openForm()">Abrir agora</button>
+    <p class="hint">Se não abrir automaticamente, toque no botão acima.</p>
+  </div>
+  <script>
+    const FORM_URL = "https://ee.kobotoolbox.org/pcIGb1Fo";
+    function supportsIframeEmbedding() {
+      return true; // tentaremos iframe; se não carregar, cairemos no redirect
+    }
+    function openForm() {
+      try {
+        // Tentar embutir em iframe
+        const ifr = document.createElement('iframe');
+        ifr.src = FORM_URL;
+        document.body.appendChild(ifr);
+        // Se em 2s não renderizar (bloqueio por X-Frame-Options), fazer redirect:
+        setTimeout(() => {
+          // Heurística simples: se o iframe não carregou em 2s, redireciona
+          if (!ifr.contentWindow || ifr.contentWindow.length === 0) {
+            window.location.replace(FORM_URL);
+          }
+        }, 2000);
+      } catch (e) {
+        // Fallback direto
+        window.location.replace(FORM_URL);
+      }
+    }
+    // tentar abrir automaticamente após a instalação/abertura
+    window.addEventListener('load', () => openForm());
+    // Registrar service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js').catch(console.warn);
+    }
+  </script>
+</body>
+</html>
